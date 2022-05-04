@@ -16,14 +16,28 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
   try{
+    await client.connect();
+    const bikeCollection = client.db("bike_data").collection("bikewarehouse");
+    // console.log("db-connected");
 
-    const client = new MongoClient(uri);
-    const bikeCollection = client.db("bike_data").collection("bikewarehouse")
-    console.log("db-connected");
+
+    // get api to read all bikeData
+    app.get("/bikes" , async(req,res)=>{
+      console.log(req);
+      const query = {};
+      const cursor = bikeCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+
+
+
+      res.send("send")
+    })
 
   }
 
   finally{
+    // await client.close();
 
   }
 }

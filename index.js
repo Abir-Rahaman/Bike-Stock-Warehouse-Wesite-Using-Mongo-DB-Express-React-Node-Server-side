@@ -19,14 +19,6 @@ async function run() {
     await client.connect();
     const bikeCollection = client.db("bike_data").collection("bikewarehouse");
     // console.log("db-connected");
-    app.get('/bikes/:id',async(req,res) =>{
-      const id = req.params.id;
-      const query = {_id: ObjectId(id)};
-      const result = await bikeCollection.findOne(query);
-      res.send(result)
-  })
-
-
     // get api to read all bikeData
     // http://localhost:5000/bikes
     app.get("/bikes" , async(req,res)=>{
@@ -41,7 +33,13 @@ async function run() {
 
 
    // get api to  single bikeData
-   
+  //  http:localhost:5000/bikes/
+   app.get('/bikes/:id',async(req,res) =>{
+    const id = req.params.id;
+    const query = {_id: ObjectId(id)};
+    const result = await bikeCollection.findOne(query);
+    res.send(result)
+})
 
 
   }

@@ -29,6 +29,21 @@ async function run() {
       res.send(result);
     })
 
+    app.get("/manageInventory" , async(req,res)=>{
+      // console.log(req);
+      const query = {};
+      const cursor = bikeCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.get('/manageInventory/:id',async(req,res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await bikeCollection.findOne(query);
+      res.send(result)
+  })
+
 
 
 
@@ -40,6 +55,44 @@ async function run() {
     const result = await bikeCollection.findOne(query);
     res.send(result)
 })
+
+
+// deliver decrease api using put
+
+app.put('/manageInventory/:id' ,async(req,res) =>{
+  const id = req.params.id;
+  const updateQuantity = req.body;
+  const filter = {_id:ObjectId(id)}
+  const option = { upsert : true}
+  const updateDoc ={
+    $set:{
+    
+      quantity : updateQuantity.quantity
+    
+    }
+  }
+  const result = await bikeCollection.updateOne(filter,updateDoc,option);
+  res.send(result);
+})
+
+// get api to deleteOne
+
+app.delete( '/manageInventory/:id' ,async(req,res)=>{
+  const id = req.params.id;
+  const query = {_id:ObjectId(id)}
+  const result = await bikeCollection.deleteOne(query);
+    res.send(result)
+
+})
+
+app.post('/manageInventory' ,async(req,res)=>{
+  const newData = req.body;
+  // console.log(newData);
+  const result = await bikeCollection.insertOne(newData);
+  res.send(result)
+
+})
+
 
 
   }

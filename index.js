@@ -59,7 +59,7 @@ async function run() {
 
 // deliver decrease api using put
 
-app.put('/manageInventory/:id' ,async(req,res) =>{
+app.put('/products/:id' ,async(req,res) =>{
   const id = req.params.id;
   const updateQuantity = req.body;
   const filter = {_id:ObjectId(id)}
@@ -67,7 +67,26 @@ app.put('/manageInventory/:id' ,async(req,res) =>{
   const updateDoc ={
     $set:{
     
-      quantity : updateQuantity.quantity
+      quantity : updateQuantity.newQuantity
+    
+    }
+  }
+  const result = await bikeCollection.updateOne(filter,updateDoc,option);
+  res.send(result);
+})
+
+
+
+app.put('/delivery/:id' ,async(req,res) =>{
+  const id = req.params.id;
+  const updateQuantity = req.body;
+  const delivery = updateQuantity.quantity -1;
+  const filter = {_id:ObjectId(id)}
+  const option = { upsert : true}
+  const updateDoc ={
+    $set:{
+    
+      quantity : delivery
     
     }
   }

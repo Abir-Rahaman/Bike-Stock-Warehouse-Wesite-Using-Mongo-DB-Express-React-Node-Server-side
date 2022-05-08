@@ -18,6 +18,7 @@ async function run() {
   try{
     await client.connect();
     const bikeCollection = client.db("bike_data").collection("bikewarehouse");
+    const productsCollection = client.db("bike_data").collection("products");
     // console.log("db-connected");
     // get api to read all bikeData
     // http://localhost:5000/bikes
@@ -110,6 +111,22 @@ app.post('/manageInventory' ,async(req,res)=>{
   const result = await bikeCollection.insertOne(newData);
   res.send(result)
 
+})
+
+
+app.get('/order' , async(req,res) =>{
+  const email = req.query.email
+  const query = {email:email};
+  const cursor = productsCollection.find(query);
+  const result = await cursor.toArray();
+  res.send(result);
+})
+
+
+app.post('/order' , async(req,res)=>{
+  const order = req.body;
+  const result = await productsCollection.insertOne(order)
+  res.send(result);
 })
 
 
